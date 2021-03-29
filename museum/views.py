@@ -15,8 +15,8 @@ class MuseumView(views.APIView):
 
 class TicketView(views.APIView):
     def get(self,request,*args,**kwargs):
-        trip = Trip.objects.get(id=kwargs['trip_id'])
-        serializer = TripSerializer(trip)
+        ticket = Ticket.objects.all()
+        serializer = TicketSerializer(ticket,many=True)
         return Response(serializer.data)
 
 
@@ -38,12 +38,14 @@ class OrderAPIView(views.APIView):
     def get(self, request, *args, **kwargs):
         return Response({
                     "id": 1,
-                    "user":1,
-                    "ticket":1,
-                    "museum":2,
-                    "quantity":5,
+                    "user": 1,
+                    "ticket": 2,
+                    "museum": 2,
+                    "quantity": 5,
                     "date_created": "2021-03-24T17:49:28.748633+06:00",
-                    "status": "pending"
+                    "status": "pending",
+                    "profile": 1,
+                    "payment_type": "card",
                         })
 
     def post(self,request,*args,**kwargs):

@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 # Create your models here.
@@ -23,6 +24,7 @@ class Trip(models.Model):
     date = models.DateField()
     places = models.PositiveIntegerField(default=0)
     museum = models.ForeignKey('Museum',on_delete=models.SET_NULL,null=True,related_name='trips')
+    
 
 
 class Profile(models.Model):
@@ -31,6 +33,7 @@ class Profile(models.Model):
     wallet = models.PositiveIntegerField(default=0)
     email = models.EmailField()
     phone = models.IntegerField()
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, )
 
 
 class Order(models.Model):
@@ -43,4 +46,8 @@ class Order(models.Model):
     status = models.CharField(choices=statuses,max_length=20,default='pending')
     quantity = models.PositiveIntegerField()
     profile = models.ForeignKey('Profile',on_delete=models.SET_NULL,null=True,related_name='orders')
-
+    total_sum = models.PositiveIntegerField(default=0)
+    payment_type = models.CharField(choices=(
+        ('card', 'card'),
+        ('cash', 'cash'),
+    ), max_length=40, default='card')
