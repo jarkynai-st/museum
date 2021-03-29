@@ -31,7 +31,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ['name','age','wallet','email','phone']
+        fields = ['name','age','email','wallet','phone']
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -41,17 +41,6 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['ticket','date_created','status','profile','quantity','total_price','count_place']
-
-
-    def get_total_price(self,obj):
-        total_price = 0
-        try:
-            total_price += obj.quantity * obj.ticket.price
-            obj.total_sum = total_price
-            obj.save()
-            return total_price
-        except AttributeError:
-            return 0
 
 
 
@@ -65,7 +54,17 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 
-
+    def get_total_price(self,obj):
+        total_price = 0
+        try:
+            total_price += obj.quantity * obj.ticket.price
+            obj.total_sum = total_price
+            obj.save()
+            obj.profile.wallet -= total_price
+            obj.profile.save()
+            return total_price
+        except AttributeError:
+            return 0
 
 
 
